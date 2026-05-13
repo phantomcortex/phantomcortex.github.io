@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kilo — Linux Engineer. Custom distributions, RPM packaging, shell tooling, and open-source contributions.">
+<title>Kilo — Linux Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0e10;
+    --ink-muted: #1a1c20;
+    --ink-faint: #272a2f;
+    --silver: #c4c8cc;
+    --silver-dim: #72787f;
+    --silver-faint: #3a3e44;
+    --gold: #c8a96e;
+    --gold-dim: #8a6e40;
+    --text: #e8eaed;
+    --text-muted: #8c9099;
+    --text-faint: #555a63;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Cormorant Garamond', serif;
+    --radius: 3px;
+  }
+
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle scanline texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 1px solid var(--silver-faint);
+    position: sticky;
+    top: 0;
+    background: rgba(13,14,16,0.92);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+  }
+
+  .nav-logo span {
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    display: block;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,169,110,0.04) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-prompt {
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-prompt::before {
+    content: '>';
+    color: var(--gold);
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.9;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--silver-faint);
+    color: var(--text-faint);
+    border-radius: var(--radius);
+  }
+
+  .tag.accent { border-color: var(--gold-dim); color: var(--gold); }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.75rem;
+    border: 1px solid;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    border-color: var(--gold);
+    color: var(--ink);
+    background: var(--gold);
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--gold); }
+
+  .btn-ghost {
+    border-color: var(--silver-faint);
+    color: var(--text-muted);
+    background: transparent;
+  }
+
+  .btn-ghost:hover { border-color: var(--silver); color: var(--text); }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 5rem 3rem;
+    border-top: 1px solid var(--silver-faint);
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 3rem;
+    line-height: 1.15;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--silver-faint);
+    border: 1px solid var(--silver-faint);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .skill-cell {
+    background: var(--ink-muted);
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .skill-cell:hover { background: var(--ink-faint); }
+
+  .skill-icon {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .skill-name {
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+  }
+
+  .skill-desc {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+
+  .skill-bar-track {
+    margin-top: 1rem;
+    height: 1px;
+    background: var(--silver-faint);
+    position: relative;
+  }
+
+  .skill-bar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    border: 1px solid var(--silver-faint);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    background: var(--ink-muted);
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .project-card:hover { border-color: var(--silver); transform: translateY(-2px); }
+  .project-card:hover::before { opacity: 1; }
+
+  .project-index {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .project-desc {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stack-pill {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    background: var(--ink-faint);
+    color: var(--text-faint);
+    border-radius: var(--radius);
+  }
+
+  .project-link {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.2s;
+  }
+
+  .project-link:hover { gap: 0.7rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--silver-faint);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-copy {
+    font-size: 0.68rem;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.22s; }
+  .delay-3 { animation-delay: 0.36s; }
+  .delay-4 { animation-delay: 0.5s; }
+  .delay-5 { animation-delay: 0.64s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { gap: 1.25rem; }
+    .hero, section { padding: 3rem 1.5rem; }
+    footer { padding: 1.5rem; }
+  }
+
+  @media (max-width: 520px) {
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="nav-logo">
+    K.
+    <span>Linux Engineer</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="about">
+  <p class="hero-prompt fade-up">Software &amp; Linux Engineer</p>
+  <h1 class="fade-up delay-1">
+    Crafting systems<br>
+    with <em>precision</em><br>
+    and purpose.
+  </h1>
+  <p class="hero-sub fade-up delay-2">
+    I build the invisible infrastructure that powers reliable machines —
+    custom Linux distributions, automation tooling, and open-source contributions
+    refined to the last detail.
+  </p>
+  <div class="hero-tags fade-up delay-3">
+    <span class="tag accent">Bazzite / rpm-ostree</span>
+    <span class="tag">Bash &amp; Shell</span>
+    <span class="tag">GitHub Actions</span>
+    <span class="tag">RPM Packaging</span>
+    <span class="tag">Kernel Configuration</span>
+    <span class="tag">Linux Gaming</span>
+  </div>
+  <div class="hero-cta fade-up delay-4">
+    <a class="btn btn-primary" href="#projects">View Projects</a>
+    <a class="btn btn-ghost" href="#contact">Get in Touch</a>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <p class="section-label">Expertise</p>
+  <h2 class="section-title">Disciplines &amp; Technologies</h2>
+  <div class="skills-grid">
+
+    <div class="skill-cell">
+      <p class="skill-icon">// sys</p>
+      <p class="skill-name">Linux Systems</p>
+      <p class="skill-desc">rpm-ostree, OSTree, kernel parameters, Bazzite/Fedora Silverblue, systemd, driver management.</p>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:93%"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <p class="skill-icon">// pkg</p>
+      <p class="skill-name">RPM Packaging</p>
+      <p class="skill-desc">Spec file authoring, COPR, custom distribution builds, dependency resolution, versioning pipelines.</p>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <p class="skill-icon">// sh</p>
+      <p class="skill-name">Shell Scripting</p>
+      <p class="skill-desc">Bash automation, Nerd Font UI, fuzzy matching, cross-distro package management, rsync utilities.</p>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <p class="skill-icon">// ci</p>
+      <p class="skill-name">GitHub Actions</p>
+      <p class="skill-desc">Automated release workflows, artifact pipelines, matrix builds, container-based CI for RPM.</p>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <p class="skill-icon">// art</p>
+      <p class="skill-name">Icon Theme Design</p>
+      <p class="skill-desc">Kora Icon Theme — SVG icon authoring, theming pipelines, GTK/GNOME integration, release automation.</p>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <p class="skill-icon">// vm</p>
+      <p class="skill-name">Wine &amp; Virtualisation</p>
+      <p class="skill-desc">Wine compilation, MIME type configuration, Steam integration, native chooser patching, containers.</p>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <p class="section-label">Selected Work</p>
+  <h2 class="section-title">Projects &amp; Contributions</h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <p class="project-index">01 / Distribution</p>
+      <h3 class="project-title">Custom Bazzite Fork</h3>
+      <p class="project-desc">A tailored immutable Linux gaming distribution built atop Fedora Silverblue, featuring curated driver configurations, custom RPM overlays, and refined GNOME defaults.</p>
+      <div class="project-stack">
+        <span class="stack-pill">rpm-ostree</span>
+        <span class="stack-pill">Containerfile</span>
+        <span class="stack-pill">GitHub Actions</span>
+        <span class="stack-pill">Bash</span>
+      </div>
+      <a class="project-link" href="https://github.com/YOUR_USERNAME/YOUR_REPO">View on GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <p class="project-index">02 / Tooling</p>
+      <h3 class="project-title">Sync &amp; Backup Utilities</h3>
+      <p class="project-desc">A suite of shell scripts providing bidirectional rsync save-game synchronisation with Nerd Font iconography, conflict resolution, and Btrfs snapshot integration.</p>
+      <div class="project-stack">
+        <span class="stack-pill">Bash</span>
+        <span class="stack-pill">rsync</span>
+        <span class="stack-pill">Btrfs</span>
+        <span class="stack-pill">Restic</span>
+      </div>
+      <a class="project-link" href="https://github.com/YOUR_USERNAME/YOUR_REPO">View on GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <p class="project-index">03 / Design</p>
+      <h3 class="project-title">Kora Icon Theme</h3>
+      <p class="project-desc">A refined GTK icon theme with comprehensive SVG coverage, automated RPM packaging via GitHub Actions, and seamless GNOME shell integration.</p>
+      <div class="project-stack">
+        <span class="stack-pill">SVG</span>
+        <span class="stack-pill">RPM Spec</span>
+        <span class="stack-pill">GNOME</span>
+        <span class="stack-pill">CI/CD</span>
+      </div>
+      <a class="project-link" href="https://github.com/YOUR_USERNAME/YOUR_REPO">View on GitHub →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FOOTER / CONTACT ── -->
+<footer id="contact">
+  <p class="footer-copy">© 2026 · Kilo · Built with precision.</p>
+  <ul class="footer-links">
+    <li><a href="https://github.com/YOUR_USERNAME">GitHub</a></li>
+    <li><a href="mailto:you@example.com">Email</a></li>
+    <li><a href="#">RSS</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
